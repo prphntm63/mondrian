@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <style>
+            :root {
+                --background-color: #black;
+                --rng10: 0;
+                --rng11: 0;
+                --rng12: 0;
+                --rng13: 0;
+                --rng20: 0;
+                --rng21: 0;
+                --rng22: 0;
+                --rng23: 0;
+
+            }
+            .container {
+                display: flex;
+                flex-direction: row;
+                margin: 10px;
+                background-color: var(--background-color);
+                width: 800px;
+                height: 600px;
+                border: 5px solid black;
+            }
+            .art {
+                display: flex;
+                margin: 0px;
+                padding: 0px;
+                min-width: 15px;
+                min-height: 15px;
+            }
+        </style>
+    </head>
+    <body onload="randomizer()">
+        <div class='container' id='container'>
+        </div>
+
+        <script>
+            let root = document.documentElement;
+            function randomizer() {
+                // let random0 = [0,1,2,3].sort(function() {
+                //     return .5-Math.random();
+                // })
+                // let random1 = [0,1,2,3].sort(function() {
+                //     return.5-Math.random();
+                // })
+
+                // for (let i=0; i=random0.length; i++) {
+                //     root.style.setProperty('--rng0'+i, random1[i]);
+                // }
+                // for (let i=0; i=random1.length; i++) {
+                //     root.style.setProperty('--rng1'+i, random1[i]);
+                // }
+
+                let colors = ['white', 'blue', 'red', 'white', 'yellow', 'black', 'white'];
+                let directions = ['row', 'column']
+                for (let i=0; i<=Math.floor((Math.random() * 4) + 1); i++) {
+                    let newDiv = document.createElement('div');
+                    newDiv.classList.add('art');
+                    newDiv.style.backgroundColor = colors[Math.floor((Math.random() * colors.length))];
+                    newDiv.style.flexDirection = directions[Math.floor((Math.random() * directions.length))];
+                    newDiv.style.flexGrow = Math.floor((Math.random() * 2)) + 1;
+                    document.getElementById('container').appendChild(newDiv);
+                    console.log('made new div');
+
+                    for (let j=0; j<=Math.floor((Math.random() * 4) + 1); j++) {
+                        let newChildDiv = document.createElement('div');
+                        newChildDiv.classList.add('art');
+                        newChildDiv.style.backgroundColor = colors[Math.floor((Math.random() * colors.length))];
+                        newChildDiv.style.flexDirection = directions[Math.floor((Math.random() * directions.length))]
+                        newChildDiv.style.flexGrow = Math.floor((Math.random() * 4)) + 1;
+                        newDiv.appendChild(newChildDiv);
+
+                        for (let k=0; k<=Math.floor((Math.random() * 2) + 1); k++) {
+                            let newChildChildDiv = document.createElement('div');
+                            newChildChildDiv.classList.add('art');
+                            newDiv.style.flexDirection = directions[Math.floor((Math.random() * directions.length))]
+                            newChildChildDiv.style.backgroundColor = colors[Math.floor((Math.random() * colors.length))];
+                            newChildChildDiv.style.flexDirection = directions[Math.floor((Math.random() * directions.length))]
+                            newChildChildDiv.style.flexGrow = Math.floor((Math.random() * 3)) + 1;
+                            newChildChildDiv.style.border = '2px solid black';
+                            newChildDiv.appendChild(newChildChildDiv);
+                        }
+                    }
+                }
+            }
+
+            
+
+        </script>
+    </body>
+</html>
