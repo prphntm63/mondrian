@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+        .content {
+            display: flex;
+            background-color: #555555;
+            width: 960px;
+            height: 600px;
+        }
+        .frame {
+            box-sizing: border-box;
+            display: flex;
+            padding: 15px;
+            width: 100%;
+            height: 100%;
+        }
+        .box {
+            box-sizing: border-box;
+            display: flex;
+            margin: 0px;
+            padding: 0px;
+        }
+        .box.row{
+            flex-direction: row;
+            justify-content: center;
+        }
+        .box.column{
+            flex-direction: column;
+            justify-content: center;
+        }
+        .box.grow1 {
+            flex-grow: 1;
+        }
+        .box.grow2 {
+            flex-grow: 2;
+        }
+        .box.grow3 {
+            flex-grow: 3;
+        }
+        .box.grow4 {
+            flex-grow: 4;
+        }
+        .box.grow8 {
+            flex-grow: 8;
+        }
+        .box.render {
+            box-sizing: border-box;
+            padding:0px;
+            margin: 4px;
+            box-shadow: 5px 5px 3px #222222;
+        }
+        .box.render.bmargin {
+            margin-bottom: 0px;
+        }
+        .box.render.tmargin {
+            margin-top: 0px;
+        }
+
+        .box.red {
+            background-color: red;
+        }
+        .box.yellow {
+            background-color: yellow;
+        }
+        .box.blue {
+            background-color: blue;
+        }
+        .box.white {
+            background-color: white;
+        }
+        .box.black {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class='content'>
+        <div class='frame'>
+            <div class='box column grow2'>
+                    <div class='box row grow1'>
+                            <div class='box render white grow1'></div>
+                            <div class='box render white grow2'></div>
+                    </div>
+                    <div class='box row grow8'>
+                        <div class='box column grow1'>
+                            <div class='box render white grow1'></div>
+                            <div class='box render white grow2'></div>
+                            <div class='box render yellow grow2'></div>
+                        </div>
+                        <div class='box column grow4'>
+                            <div class='box render red grow2'></div>
+                            <div class='box row grow1'>
+                                <div class='box render black grow1'></div>
+                                <div class='box column grow1'>
+                                    <div class='box render white grow1'></div>
+                                    <div class='box render white grow1'></div>
+                                </div>
+                            </div>
+                            <div class='box row grow1'>
+                                <div class='box render white grow1'></div>
+                                <div class='box column grow1'>
+                                    <div class='box render white grow1'></div>
+                                    <div class='box row grow1'>
+                                        <div class='box bmargin   grow1'></div>
+                                        <div class='box bmargin   grow1'></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class='box row grow1'>
+                            <div class='box render white grow3' ></div>
+                            <div class='box row grow2'>
+                                    <div class='box tmargin render yellow grow1' style='margin-top: -37%;'></div>
+                                    <div class='box tmargin render white grow1' style='margin-top: -37%'></div>
+                            </div>
+                    </div>
+            </div>
+            <div class='box column grow1'>
+                    <div class='box render yellow grow1'></div>
+                    <div class='box render yellow grow2'></div>
+                    <div class='box row grow2'>
+                            <div class='box render white grow1'></div>
+                            <div class='box render white grow1'></div>
+                    </div>
+                    <div class='box render white grow1'></div>
+                    <div class='box render blue grow2'></div>
+                    <div class='box render red grow2'></div>
+            </div>
+            <div class='box column grow1'>
+                    <div class='box render blue grow2'></div>
+                    <div class='box render red grow2'></div>
+                    <div class='box render white grow1'></div>
+                    <div class='box row grow2'>
+                            <div class='box render white grow1'></div>
+                            <div class='box render white grow1'></div>
+                    </div>
+                    <div class='box render yellow grow2'></div>
+                    <div class='box row grow1'>
+                            <div class='box render white grow1'></div>
+                            <div class='box render black grow1'></div>
+                    </div>
+            </div>
+
+            <div class='box column grow2'>
+                <div class='box row grow1'>
+                    <div class='box row grow2'>
+                            <div class='box render yellow grow1'></div>
+                            <div class='box render black grow1'></div>
+                    </div>
+                    <div class='box render white grow3'></div>
+                </div>
+                <div class='box row grow8'>
+                    <div class='box column grow4'>
+                        <div class='box row grow1'>
+                            <div class='box column grow1'>
+                                <div class='box render yellow grow1'></div>
+                                <div class='box render black grow1'></div>
+                            </div>
+                            <div class='box render white grow1'></div>
+                        </div>
+                        <div class='box row grow1'>
+                            <div class='box column grow1'>
+                                <div class='box render white grow1'></div>
+                                <div class='box render white grow1'></div>
+                            </div>
+                            <div class='box render black grow1'></div>
+                        </div>
+                        <div class='box render blue grow2'></div>
+                    </div>
+                    <div class='box column grow1'>
+                        <div class='box render white grow1'></div>
+                        <div class='box render white grow2'></div>
+                        <div class='box render yellow grow2'></div>
+                    </div>
+                </div>
+                <div class='box row grow1'>
+                        <div class='box render white grow2'></div>
+                        <div class='box render white grow1'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

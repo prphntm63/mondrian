@@ -5,27 +5,51 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Document</title>
+        <script>src='http://chancejs.com/chance.min.js'</script>
         <style>
             :root {
                 --background-color: #black;
-                --rng10: 0;
-                --rng11: 0;
-                --rng12: 0;
-                --rng13: 0;
-                --rng20: 0;
-                --rng21: 0;
-                --rng22: 0;
-                --rng23: 0;
+                --wall-color: #456;
+                --random-width: 800px;
+                --random-height: 600px;
 
+            }
+            html {
+                height:100%;
+            }
+            body {
+                margin: 0px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background-color: var(--wall-color);
+                background-image: -webkit-linear-gradient(left, hsla(0,0%,0%,0) 0%, hsla(0,0%,0%,0) 50%, hsla(0,0%,0%,.02) 50%, hsla(0,0%,0%,.02) 100%);
+                background-position: 50% 50%;
+                background-size: 40px 40px;
+                box-shadow: inset 0 0 200px 30px hsla(0, 0%, 0%, 0.6);
+                min-height: 100%;
+                padding: 50px 0;
+                box-sizing: border-box;
             }
             .container {
                 display: flex;
                 flex-direction: row;
-                margin: 10px;
-                background-color: var(--background-color);
-                width: 800px;
-                height: 600px;
-                border: 5px solid black;
+                margin: 0 auto;
+                padding: 10px;
+                width: var(--random-width);
+                height: var(--random-height);
+                max-width: 90vw;
+                max-height: 60vh;
+                box-shadow: inset 0 2px 0 -1px hsla(0,0%,100%,.2),
+                            inset 0 50px 50px -30px hsla(0,0%,0%,.6),
+                            inset 0 150px 150px -30px hsla(0,0%,100%,.3),
+                            inset 0 -30px 30px hsla(0,0%,0%,.3),
+                            inset 0 0 5px hsla(0,0%,0%,.6),
+                            0 0 5px 1px hsla(0,0%,0%,.3),
+                            0 6px 6px -3px hsla(0,0%,0%,.3),
+                            0 0 300px hsla(0,0%,100%,.1);
+                position: relative;
+                border: 1px solid var(--background-color);
             }
             .art {
                 display: flex;
@@ -34,14 +58,87 @@
                 min-width: 15px;
                 min-height: 15px;
             }
+            .nameplate-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                width: var(--random-width);
+                max-width: 90vw;
+                margin: 10px 0px;
+            }
+            .nameplate{
+                background: #ddd;
+                background-image: -webkit-linear-gradient(-250deg, transparent, transparent 50%, hsla(0,0%,100%,.2) 50%, hsla(0,0%,100%,.1));
+                background-image:    -moz-linear-gradient(-250deg, transparent, transparent 50%, hsla(0,0%,100%,.2) 50%, hsla(0,0%,100%,.1));
+                background-image:     -ms-linear-gradient(-250deg, transparent, transparent 50%, hsla(0,0%,100%,.2) 50%, hsla(0,0%,100%,.1));
+                background-image:      -o-linear-gradient(-250deg, transparent, transparent 50%, hsla(0,0%,100%,.2) 50%, hsla(0,0%,100%,.1));
+                background-image:         linear-gradient(-250deg, transparent, transparent 50%, hsla(0,0%,100%,.2) 50%, hsla(0,0%,100%,.1));
+                box-shadow: inset 0 0 2px 1px hsla(0,0%,0%,.3),
+                            inset 0 -15px 30px hsla(0,0%,0%,.1),
+                            0 0 5px 1px hsla(0,0%,0%,.3),
+                            0 6px 6px -3px hsla(0,0%,0%,.3);
+                color: #444;
+                font: 10px/1.5 sans-serif;
+                padding: 15px;
+                text-align: center;
+                text-shadow: 0 1px 1px hsla(0,0%,100%,.6);
+                width: 130px;
+            }
+            .nameplate:after {
+                background-image: -webkit-linear-gradient(-53deg, hsla(0,0%,100%,.025), hsla(0,0%,100%,.05) 50%, transparent 50%, transparent);
+                background-image:    -moz-linear-gradient(-53deg, hsla(0,0%,100%,.025), hsla(0,0%,100%,.05) 50%, transparent 50%, transparent);
+                background-image:     -ms-linear-gradient(-53deg, hsla(0,0%,100%,.025), hsla(0,0%,100%,.05) 50%, transparent 50%, transparent);
+                background-image:      -o-linear-gradient(-53deg, hsla(0,0%,100%,.025), hsla(0,0%,100%,.05) 50%, transparent 50%, transparent);
+                background-image:         linear-gradient(-53deg, hsla(0,0%,100%,.025), hsla(0,0%,100%,.05) 50%, transparent 50%, transparent);
+                content: '';
+                height: 300px;
+                width: 400px;
+            }
         </style>
     </head>
     <body onload="randomizer()">
         <div class='container' id='container'>
         </div>
-
+        <div class='nameplate-container'>
+            <div class='nameplate'>
+                <div id='title'></h1>
+                <div id='name'></h3>
+                <div id='price'></h3>
+            </div>
+        </div>
+        <script src="http://chancejs.com/chance.min.js"></script>
         <script>
             let root = document.documentElement;
+
+            root.style.setProperty('--random-width', Math.floor((Math.random() * 400) + 600) + 'px')
+            root.style.setProperty('--random-height', Math.floor((Math.random() * 300) + 450) + 'px')
+
+            var chance = new Chance();
+            let title = ''
+            for (let i=0; i<=Math.floor((Math.random() * 2) + 1); i++) {
+                let titleWord = chance.word();
+                titleWord = chance.capitalize(titleWord);
+                title += ' ' + titleWord;
+            }
+            let name = chance.name({
+                middle: true,
+            })
+            let price = chance.dollar({
+                max: 1000000
+            })
+
+            document.getElementById('title').innerHTML = '<strong>' + title + '</strong><br>' + name + '<br>' + price;
+            document.getElementById('name').innerText = name;
+            document.getElementById('price').innerText = price;
+
+
+            function createArtStructure(depth) {
+                let colors = ['white', 'blue', 'red', 'white', 'yellow', 'black', 'white'];
+                let directions = ['row', 'column'];
+
+
+            }
+
             function randomizer() {
                 // let random0 = [0,1,2,3].sort(function() {
                 //     return .5-Math.random();
@@ -58,12 +155,13 @@
                 // }
 
                 let colors = ['white', 'blue', 'red', 'white', 'yellow', 'black', 'white'];
-                let directions = ['row', 'column']
-                for (let i=0; i<=Math.floor((Math.random() * 4) + 1); i++) {
+                let directions = ['row', 'column', 'column']
+                for (let i=0; i<=Math.floor((Math.random() * 4) + 2); i++) {
+                    
                     let newDiv = document.createElement('div');
                     newDiv.classList.add('art');
                     newDiv.style.backgroundColor = colors[Math.floor((Math.random() * colors.length))];
-                    newDiv.style.flexDirection = directions[Math.floor((Math.random() * directions.length))];
+                    newDiv.style.flexDirection = 'row';
                     newDiv.style.flexGrow = Math.floor((Math.random() * 2)) + 1;
                     document.getElementById('container').appendChild(newDiv);
                     console.log('made new div');
