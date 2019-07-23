@@ -14,8 +14,8 @@
                 --wall-color: #456;
                 --random-width: 800px;
                 --random-height: 600px;
-
             }
+
             html {
                 height:100%;
             }
@@ -28,10 +28,23 @@
                 background-image: -webkit-linear-gradient(left, hsla(0,0%,0%,0) 0%, hsla(0,0%,0%,0) 50%, hsla(0,0%,0%,.02) 50%, hsla(0,0%,0%,.02) 100%);
                 background-position: 50% 50%;
                 background-size: 40px 40px;
+                background-attachment: fixed;
                 box-shadow: inset 0 0 200px 30px hsla(0, 0%, 0%, 0.6);
                 min-height: 100%;
                 padding: 50px 0;
                 box-sizing: border-box;
+            }
+            .framebuffer {
+                position: fixed;
+                left: 0px;
+                top: 0px;
+                display: flex;
+                flex-direction: row;
+                overflow-x: hidden;
+                transition: left 1s;
+            }
+            .frameholder {
+                overflow: hidden;
             }
             .container {
                 display: flex;
@@ -40,7 +53,7 @@
                 padding: 10px;
                 width: var(--random-width);
                 height: var(--random-height);
-                max-width: 90vw;
+                max-width: 80vw;
                 max-height: 60vh;
                 box-shadow: inset 0 2px 0 -1px hsla(0,0%,100%,.2),
                             inset 0 50px 50px -30px hsla(0,0%,0%,.6),
@@ -66,7 +79,7 @@
                 justify-content: flex-end;
                 width: var(--random-width);
                 max-width: 90vw;
-                margin: 10px 0px;
+                margin: 10px auto;
             }
             .nameplate{
                 background: #ddd;
@@ -96,30 +109,101 @@
                 height: 300px;
                 width: 400px;
             }
+            .arrow.right{
+                position: fixed;
+                bottom: 60vh;
+                right: 1vw;
+                width: 5vw;
+                height: 5vw;
+                max-width: 50px;
+                max-height: 50px;
+                background-image:url(https://d29fhpw069ctt2.cloudfront.net/icon/image/39093/preview.png);
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
+            .arrow.left {
+                position:fixed;
+                bottom: 60vh;
+                left: 1vw;
+                width: 5vw;
+                height: 5vw;
+                max-width: 50px;
+                max-height: 50px;
+                background-image:url(https://d29fhpw069ctt2.cloudfront.net/icon/image/39092/preview.png);
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
         </style>
     </head>
 
-    <body>
-        <div class='container' id='container'>
-        </div>
-        <div class='nameplate-container'>
-            <div class='nameplate'>
-                <div id='title'></h1>
-                <div id='name'></h3>
-                <div id='price'></h3>
-            </div>
-        </div>
+    <body onload='generateFrame()'>
+        <div class='framebuffer' id='framebuffer'></div>
+        <a href="#" class='arrow left' onclick='clickLeft()'></a>
+        <a href="#" class='arrow right' onclick='clickRight()'></a>
+        
+        
 
         <!-- Chance.js script for generating random nameplate vals -->
         <script src="https://chancejs.com/chance.min.js"></script>
 
         <script>
-            let containerFrame = document.getElementById('container');
-            let art = createArtStructure(0)
-            
-            setArtSize();
-            renderArtStructure(art, containerFrame);
-            generateNameplate();
+
+            function clickLeft () {
+                let framebuffer = document.getElementById('framebuffer');
+                var viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                let currentLeft = framebuffer.style.left.slice(0, -2);
+                console.log((currentLeft + viewportWidth) + 'px');
+
+                framebuffer.style.left = (parseInt(currentLeft) + parseInt(viewportWidth)) + 'px';
+            }
+
+            function clickRight() {
+                let framebuffer = document.getElementById('framebuffer');
+                var viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                let currentLeft = framebuffer.style.left.slice(0,-2);
+                console.log(currentLeft);
+
+                generateFrame();
+                framebuffer.style.left = currentLeft - viewportWidth + 'px';
+            }
+
+            function generateFrame() {
+                let framebuffer = document.getElementById('framebuffer');
+
+                let frameHolder = document.createElement('div');
+                frameHolder.classList.add('frameholder');
+                frameHolder.style.width = '100vw';
+
+                let randomWidth = generateRNG(400, 600) + 'px';
+                let randomHeight = generateRNG(300, 450) + 'px';
+
+                let containerFrame = document.createElement('div');
+                containerFrame.classList.add('container');
+                containerFrame.style.width = randomWidth;
+                containerFrame.style.height = randomHeight;
+
+                let nameplateFrame = document.createElement('div');
+                nameplateFrame.classList.add('nameplate-container');
+                nameplateFrame.style.width = randomWidth;
+                let nameplateDiv = document.createElement('div');
+                nameplateDiv.classList.add('nameplate')
+                let titleDiv = document.createElement('div');
+                titleDiv.id = generateUUID();
+                nameplateDiv.appendChild(titleDiv);
+                nameplateFrame.appendChild(nameplateDiv);
+
+                containerFrame.id = generateUUID();
+                let art = createArtStructure(0)
+                
+                renderArtStructure(art, containerFrame);
+                generateNameplate(nameplateDiv);
+
+                frameHolder.appendChild(containerFrame);
+                frameHolder.appendChild(nameplateFrame);
+
+                framebuffer.appendChild(frameHolder);
+
+            }
 
             // Set frame size
             function setArtSize() {
@@ -142,8 +226,13 @@
                 return array[generateRNG(array.length)];
             }
 
+            // Class UUID generator
+            function generateUUID() {
+                return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+            }
+
             // Generate a nice nameplate, no? Uses Chance.js
-            function generateNameplate() {
+            function generateNameplate(nameplateFrame) {
                 var chance = new Chance();
                 let title = ''
                 for (let i=0; i<=generateRNG(1,3); i++) {
@@ -158,7 +247,8 @@
                     max: 1000000
                 })
 
-                document.getElementById('title').innerHTML = '<strong>' + title + '</strong><br>' + name + '<br>' + price;
+                // document.getElementById('title')
+                nameplateFrame.innerHTML = '<strong>' + title + '</strong><br>' + name + '<br>' + price;
 
                 return {title, name, price};
             }
