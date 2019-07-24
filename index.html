@@ -35,6 +35,7 @@
                 box-sizing: border-box;
             }
             .framebuffer {
+                margin-top: 10vh;
                 position: fixed;
                 left: 0px;
                 top: 0px;
@@ -65,6 +66,7 @@
                             0 0 300px hsla(0,0%,100%,.1);
                 position: relative;
                 border: 1px solid var(--background-color);
+                transition: transform 0.5s;
             }
             .art {
                 display: flex;
@@ -141,32 +143,33 @@
         <a href="#" class='arrow left' onclick='clickLeft()'></a>
         <a href="#" class='arrow right' onclick='clickRight()'></a>
         
-        
 
         <!-- Chance.js script for generating random nameplate vals -->
         <script src="https://chancejs.com/chance.min.js"></script>
+        <script src='bundle.js'></script>
+        <script src='reimg.js'></script>
 
         <script>
-
+            // Move viewport to right / go backward and get other art
             function clickLeft () {
                 let framebuffer = document.getElementById('framebuffer');
                 var viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
                 let currentLeft = framebuffer.style.left.slice(0, -2);
-                console.log((currentLeft + viewportWidth) + 'px');
 
                 framebuffer.style.left = (parseInt(currentLeft) + parseInt(viewportWidth)) + 'px';
             }
 
+            // Create new art / Move viewport to right
             function clickRight() {
                 let framebuffer = document.getElementById('framebuffer');
                 var viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
                 let currentLeft = framebuffer.style.left.slice(0,-2);
-                console.log(currentLeft);
 
                 generateFrame();
                 framebuffer.style.left = currentLeft - viewportWidth + 'px';
             }
 
+            // Create new art! Generate DOM structure and add it to viewport
             function generateFrame() {
                 let framebuffer = document.getElementById('framebuffer');
 
@@ -181,6 +184,7 @@
                 containerFrame.classList.add('container');
                 containerFrame.style.width = randomWidth;
                 containerFrame.style.height = randomHeight;
+                
 
                 let nameplateFrame = document.createElement('div');
                 nameplateFrame.classList.add('nameplate-container');
@@ -191,9 +195,15 @@
                 titleDiv.id = generateUUID();
                 nameplateDiv.appendChild(titleDiv);
                 nameplateFrame.appendChild(nameplateDiv);
+                containerFrame.title = 'Click to Download!';
+                containerFrame.style.cursor = 'pointer';
+                containerFrame.onclick = function () { createImage(containerFrame); }
+                containerFrame.onmouseover = function() { zoomDiv(containerFrame); }
+                containerFrame.onmouseleave = function() { unzoomDiv(containerFrame); }
+                // containerFrame.onclick = createImage.bind(null, containerFrame)
 
                 containerFrame.id = generateUUID();
-                let art = createArtStructure(0)
+                let art = createArtStructure();
                 
                 renderArtStructure(art, containerFrame);
                 generateNameplate(nameplateDiv);
@@ -205,11 +215,22 @@
 
             }
 
-            // Set frame size
-            function setArtSize() {
-                let root = document.documentElement;
-                root.style.setProperty('--random-width', Math.floor((Math.random() * 400) + 600) + 'px')
-                root.style.setProperty('--random-height', Math.floor((Math.random() * 300) + 450) + 'px')
+            // Download image on click
+            function createImage(renderDiv) {
+                html2canvas(renderDiv).then(function(canvas) {
+                    ReImg.fromCanvas(canvas).downloadPng();
+                })
+            }
+
+            // Zoom in on hover
+            function zoomDiv(containerFrame) {
+                containerFrame.style.transform = 'scale(1.0625)'
+
+            }
+
+            // Anti-zoom on anti-hover
+            function unzoomDiv(containerFrame) {
+                containerFrame.style.transform = 'scale(0.94117647)'
             }
 
             // 1 arg - generate a random integer less than the arg. 2 args - generate a random integer between the args
@@ -256,6 +277,10 @@
 
             // Recursive function for generating art 'elements'
             function createArtStructure(depth) {
+                if (depth == undefined) {
+                    depth = 0;
+                }
+
                 let colors = ['white', 'blue', 'red', 'white', 'yellow', 'black', 'white'];
                 let directions = ['row', 'column'];
                 let art=[];
@@ -278,15 +303,19 @@
             }
 
             // Recursive function for generating HTML DOM flexbox elements for art element
-            function renderArtStructure(art, parent) {
+            function renderArtStructure(art, parent, direction) {
                 let directions = ['row', 'column'];
+
+                if (direction == undefined) {
+                    direction = 'column';
+                }
 
                 art.forEach(child => {
                     let childDiv = document.createElement('div');
                     childDiv.classList.add('art');
 
                     if (Array.isArray(child)) {
-                        renderArtStructure(child, childDiv)
+                        renderArtStructure(child, childDiv, direction)
                     } else {
                         childDiv.style.flexDirection = child.direction;
                         childDiv.style.flexGrow = child.grow;
@@ -294,7 +323,14 @@
                         childDiv.style.border = '2px solid black'
                     }
 
-                    childDiv.style.flexDirection = selectRandom(directions);
+                    // Alternate row and column directions for better art!
+                    if (direction == 'row') {
+                        childDiv.style.flexDirection = 'row';
+                        direction = 'column';
+                    } else {
+                        childDiv.style.flexDirection = 'column';
+                        direction = 'row';
+                    }
                     childDiv.style.flexGrow = generateRNG(1,6);
                     parent.appendChild(childDiv);
                     return parent;

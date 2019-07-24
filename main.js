@@ -1,0 +1,1 @@
+html2canvas = require('html2canvas');

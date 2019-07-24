@@ -1,0 +1,32 @@
+.white {
+    background-color: white;
+}
+
+.red {
+    background-color: red;
+}
+
+.brown {
+    background-color: brown;
+}
+
+.tan {
+    background-color: bisque;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.black {
+    background-color: black;
+}
+
+.row {
+    width: 960px;
+    height: 60px;
+}
