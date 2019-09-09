@@ -46,7 +46,7 @@
             }
             .frameholder {
                 overflow: hidden;
-                height: 100%;
+                height: 100vh;
             }
             .container {
                 display: flex;
@@ -153,9 +153,11 @@
         <script>
             // Move viewport to right / go backward and get other art
             function clickLeft () {
+                
                 let framebuffer = document.getElementById('framebuffer');
                 var viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
                 let currentLeft = framebuffer.style.left.slice(0, -2);
+                if (currentLeft == 0) {return};
 
                 framebuffer.style.left = (parseInt(currentLeft) + parseInt(viewportWidth)) + 'px';
             }
